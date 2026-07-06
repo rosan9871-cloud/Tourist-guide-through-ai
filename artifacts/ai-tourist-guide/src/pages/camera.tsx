@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -11,6 +11,10 @@ import {
   Lightbulb,
   RotateCcw,
   BookOpen,
+  Video,
+  X,
+  RefreshCw,
+  AlertCircle,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -19,21 +23,95 @@ import { useAuth } from '@/lib/auth';
 import { useToast } from '@/hooks/use-toast';
 
 type Status = 'idle' | 'analyzing' | 'result';
+type Mode = 'choose' | 'live' | 'preview';
 
 export default function CameraPage() {
   const [, setLocation] = useLocation();
   const { user } = useAuth();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   const [status, setStatus] = useState<Status>('idle');
+  const [mode, setMode] = useState<Mode>('choose');
   const [image, setImage] = useState<string | null>(null);
+  const [facingMode, setFacingMode] = useState<'environment' | 'user'>('environment');
+  const [cameraError, setCameraError] = useState<string | null>(null);
+  const [isStreamReady, setIsStreamReady] = useState(false);
+
+  const stopStream = () => {
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    streamRef.current = null;
+    setIsStreamReady(false);
+  };
+
+  const startCamera = async (nextFacing: 'environment' | 'user' = facingMode) => {
+    setCameraError(null);
+    stopStream();
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: nextFacing },
+        audio: false,
+      });
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play();
+      }
+      setIsStreamReady(true);
+    } catch (err) {
+      setCameraError(
+        'Could not access your camera. Check browser permissions, or use "Upload Photo" instead.'
+      );
+      setIsStreamReady(false);
+    }
+  };
+
+  const openLiveCamera = () => {
+    setMode('live');
+    startCamera();
+  };
+
+  const switchCamera = () => {
+    const next = facingMode === 'environment' ? 'user' : 'environment';
+    setFacingMode(next);
+    startCamera(next);
+  };
+
+  const closeLiveCamera = () => {
+    stopStream();
+    setMode('choose');
+    setCameraError(null);
+  };
+
+  const capturePhoto = () => {
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    if (!video || !canvas) return;
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+    setImage(dataUrl);
+    stopStream();
+    setMode('preview');
+    setStatus('idle');
+  };
+
+  useEffect(() => {
+    return () => stopStream();
+  }, []);
 
   const handleFile = (file: File | undefined) => {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = () => {
       setImage(reader.result as string);
+      setMode('preview');
       setStatus('idle');
     };
     reader.readAsDataURL(file);
@@ -59,6 +137,7 @@ export default function CameraPage() {
   const reset = () => {
     setImage(null);
     setStatus('idle');
+    setMode('choose');
   };
 
   return (
@@ -78,7 +157,7 @@ export default function CameraPage() {
               AI Camera
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto">
-              Snap or upload a photo of any landmark and let our AI tell you its story.
+              Snap a live photo or upload one of any landmark and let our AI tell you its story.
             </p>
           </motion.div>
         </div>
@@ -95,26 +174,21 @@ export default function CameraPage() {
               transition={{ duration: 0.4 }}
             >
               <div className="bg-card border border-border rounded-3xl p-6 md:p-10 shadow-sm">
-                {!image ? (
-                  <div
-                    onClick={() => fileInputRef.current?.click()}
-                    className="cursor-pointer border-2 border-dashed border-border rounded-2xl aspect-video flex flex-col items-center justify-center text-center p-8 hover:border-primary/50 hover:bg-primary/5 transition-all"
-                  >
+                {mode === 'choose' && (
+                  <div className="border-2 border-dashed border-border rounded-2xl aspect-video flex flex-col items-center justify-center text-center p-8">
                     <div className="h-16 w-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                      <Upload className="h-7 w-7 text-primary" />
+                      <CameraIcon className="h-7 w-7 text-primary" />
                     </div>
-                    <h3 className="text-xl font-bold mb-2">Upload or capture a photo</h3>
+                    <h3 className="text-xl font-bold mb-2">Capture or upload a photo</h3>
                     <p className="text-muted-foreground mb-6 max-w-sm">
-                      Drag a photo here, or tap to choose one from your device / camera.
+                      Use your camera to capture a landmark in real time, or upload a photo from your device.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3">
-                      <Button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          fileInputRef.current?.click();
-                        }}
-                      >
-                        <Upload className="mr-2 h-4 w-4" /> Choose Photo
+                      <Button onClick={openLiveCamera}>
+                        <Video className="mr-2 h-4 w-4" /> Open Camera
+                      </Button>
+                      <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
+                        <Upload className="mr-2 h-4 w-4" /> Upload Photo
                       </Button>
                     </div>
                     <input
@@ -126,7 +200,77 @@ export default function CameraPage() {
                       onChange={(e) => handleFile(e.target.files?.[0])}
                     />
                   </div>
-                ) : (
+                )}
+
+                {mode === 'live' && (
+                  <div>
+                    <div className="relative rounded-2xl overflow-hidden aspect-video mb-6 bg-black">
+                      <video
+                        ref={videoRef}
+                        playsInline
+                        muted
+                        className={`w-full h-full object-cover ${facingMode === 'user' ? 'scale-x-[-1]' : ''}`}
+                      />
+                      <canvas ref={canvasRef} className="hidden" />
+
+                      {!isStreamReady && !cameraError && (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+                          <Loader2 className="h-8 w-8 animate-spin mb-3" />
+                          <p className="text-sm text-white/80">Starting camera...</p>
+                        </div>
+                      )}
+
+                      {cameraError && (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center p-6">
+                          <AlertCircle className="h-8 w-8 mb-3 text-destructive" />
+                          <p className="text-sm text-white/90 max-w-xs">{cameraError}</p>
+                        </div>
+                      )}
+
+                      <button
+                        onClick={closeLiveCamera}
+                        className="absolute top-4 right-4 h-10 w-10 rounded-full bg-black/50 backdrop-blur flex items-center justify-center text-white hover:bg-black/70 transition-colors"
+                        aria-label="Close camera"
+                      >
+                        <X className="h-5 w-5" />
+                      </button>
+
+                      {isStreamReady && (
+                        <button
+                          onClick={switchCamera}
+                          className="absolute top-4 left-4 h-10 w-10 rounded-full bg-black/50 backdrop-blur flex items-center justify-center text-white hover:bg-black/70 transition-colors"
+                          aria-label="Switch camera"
+                        >
+                          <RefreshCw className="h-5 w-5" />
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <Button
+                        size="lg"
+                        className="flex-1 h-14 text-lg rounded-xl"
+                        onClick={capturePhoto}
+                        disabled={!isStreamReady}
+                      >
+                        <CameraIcon className="mr-2 h-5 w-5" /> Capture Photo
+                      </Button>
+                      <Button size="lg" variant="outline" className="h-14 rounded-xl" onClick={() => fileInputRef.current?.click()}>
+                        <Upload className="mr-2 h-4 w-4" /> Upload Instead
+                      </Button>
+                    </div>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      capture="environment"
+                      className="hidden"
+                      onChange={(e) => handleFile(e.target.files?.[0])}
+                    />
+                  </div>
+                )}
+
+                {mode === 'preview' && image && (
                   <div>
                     <div className="relative rounded-2xl overflow-hidden aspect-video mb-6">
                       <img src={image} alt="Captured landmark" className="w-full h-full object-cover" />
@@ -159,7 +303,11 @@ export default function CameraPage() {
                         size="lg"
                         variant="outline"
                         className="h-14 rounded-xl"
-                        onClick={reset}
+                        onClick={() => {
+                          setImage(null);
+                          setMode('choose');
+                          setStatus('idle');
+                        }}
                         disabled={status === 'analyzing'}
                       >
                         <RotateCcw className="mr-2 h-4 w-4" /> Retake
