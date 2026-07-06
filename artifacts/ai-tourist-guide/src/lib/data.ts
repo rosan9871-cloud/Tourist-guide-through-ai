@@ -208,6 +208,121 @@ export const destinations: Destination[] = [
     restaurants: ["Nautika", "Restaurant 360"],
     hotels: ["Villa Dubrovnik", "Hotel Excelsior"],
     travelTips: ["Walk the city walls at sunrise to avoid crowds", "Take a boat trip to nearby islands", "Book Old Town accommodations for easy access"]
+  },
+  {
+    id: "dest-11",
+    name: "Everest Base Camp",
+    country: "Nepal",
+    category: "Adventure",
+    images: [
+      "https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?auto=format&fit=crop&q=80&w=1000",
+      "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&q=80&w=1000"
+    ],
+    rating: 4.9,
+    shortDescription: "A legendary trek through the Himalayas to the foot of the world's tallest mountain.",
+    longDescription: "Everest Base Camp is the starting point for expeditions up Mount Everest, the world's highest peak. The trek winds through Sherpa villages, suspension bridges, and ancient monasteries in the Khumbu region, rewarding trekkers with unmatched views of the Himalayan giants.",
+    history: "The route became famous after Sir Edmund Hillary and Tenzing Norgay's historic 1953 summit of Everest, opening the region to trekkers worldwide.",
+    culture: "Home to the Sherpa people, renowned mountaineers whose Buddhist traditions and monasteries define the Khumbu region.",
+    bestTimeToVisit: "March to May or September to November for clear skies and stable weather.",
+    nearbyAttractions: ["Namche Bazaar", "Tengboche Monastery", "Kala Patthar"],
+    restaurants: ["Sherpa Barista", "Everest Bakery Namche"],
+    hotels: ["Yeti Mountain Home", "Everest View Hotel"],
+    travelTips: ["Acclimatize properly to avoid altitude sickness", "Hire a licensed local guide and porter", "Pack layered, high-altitude clothing"]
+  },
+  {
+    id: "dest-12",
+    name: "Kathmandu Valley",
+    country: "Nepal",
+    category: "Heritage",
+    images: [
+      "https://images.unsplash.com/photo-1544161512-6a2e8f2cf3f5?auto=format&fit=crop&q=80&w=1000"
+    ],
+    rating: 4.7,
+    shortDescription: "Ancient temples, living goddesses, and a maze of medieval city squares.",
+    longDescription: "The Kathmandu Valley is home to seven UNESCO World Heritage Sites, including the historic Durbar Squares of Kathmandu, Patan, and Bhaktapur, along with the sacred Swayambhunath and Boudhanath stupas. It's a living museum of Newar art, architecture, and centuries-old traditions.",
+    history: "Once three rival Malla kingdoms, the valley's cities competed to build ever more elaborate palaces and temples between the 12th and 18th centuries.",
+    culture: "A rich blend of Hindu and Buddhist traditions, vibrant festivals, and intricate wood and metal craftsmanship.",
+    bestTimeToVisit: "October to November or February to April for pleasant weather and clear mountain views.",
+    nearbyAttractions: ["Swayambhunath Stupa", "Bhaktapur Durbar Square", "Boudhanath Stupa"],
+    restaurants: ["Krishnarpan", "Thamel House Restaurant"],
+    hotels: ["Dwarika's Hotel", "Hyatt Regency Kathmandu"],
+    travelTips: ["Remove shoes before entering temples", "Bargain respectfully in Thamel markets", "Hire a guide to understand the Durbar Square history"]
+  },
+  {
+    id: "dest-13",
+    name: "Taj Mahal",
+    country: "India",
+    category: "Heritage",
+    images: [
+      "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&q=80&w=1000"
+    ],
+    rating: 4.9,
+    shortDescription: "An ivory-white marble mausoleum and eternal monument to love.",
+    longDescription: "The Taj Mahal is a white marble mausoleum in Agra, India, commissioned in 1632 by Mughal emperor Shah Jahan to house the tomb of his favorite wife, Mumtaz Mahal. Widely regarded as the finest example of Mughal architecture, it draws millions of visitors each year and is one of the New7Wonders of the World.",
+    history: "Built between 1632 and 1653 by an estimated 20,000 artisans and craftsmen from across the Mughal Empire and beyond.",
+    culture: "A powerful symbol of Mughal art blending Persian, Islamic, and Indian architectural styles, and a UNESCO World Heritage Site.",
+    bestTimeToVisit: "October to March for cooler, comfortable sightseeing weather.",
+    nearbyAttractions: ["Agra Fort", "Mehtab Bagh", "Fatehpur Sikri"],
+    restaurants: ["Pinch of Spice", "Esphahan"],
+    hotels: ["The Oberoi Amarvilas", "ITC Mughal"],
+    travelTips: ["Visit at sunrise to avoid crowds and heat", "Book tickets online in advance", "Hire an official guide at the entrance"]
+  },
+  {
+    id: "dest-14",
+    name: "Kerala Backwaters",
+    country: "India",
+    category: "Culture",
+    images: [
+      "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&q=80&w=1000"
+    ],
+    rating: 4.7,
+    shortDescription: "Tranquil palm-fringed canals, houseboats, and lush tropical greenery.",
+    longDescription: "The Kerala Backwaters are a network of interconnected canals, rivers, lakes, and lagoons that run parallel to the Arabian Sea coast in southern India. Traditional houseboats, known as kettuvallams, drift past villages, rice paddies, and coconut groves, offering a serene glimpse into local life.",
+    history: "Once vital trade routes for spices and coir, the canals have supported Kerala's coastal communities for centuries.",
+    culture: "Known for Kathakali dance, Ayurvedic wellness traditions, and a cuisine built around coconut, rice, and fresh seafood.",
+    bestTimeToVisit: "September to March for pleasant weather and calm waters.",
+    nearbyAttractions: ["Alleppey", "Kumarakom Bird Sanctuary", "Vembanad Lake"],
+    restaurants: ["Kayikka's Hotel", "Fusion Bay"],
+    hotels: ["Kumarakom Lake Resort", "Punnamada Resort"],
+    travelTips: ["Book an overnight houseboat stay", "Visit during the Nehru Trophy Boat Race in August", "Try authentic Kerala sadya on a banana leaf"]
+  },
+  {
+    id: "dest-15",
+    name: "Ha Long Bay",
+    country: "Vietnam",
+    category: "Seas",
+    images: [
+      "https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&q=80&w=1000"
+    ],
+    rating: 4.8,
+    shortDescription: "Thousands of limestone karsts rising from emerald waters.",
+    longDescription: "Ha Long Bay is a UNESCO World Heritage Site in northern Vietnam, known for its emerald waters and thousands of towering limestone islands topped by rainforests. Cruises through the bay reveal hidden caves, floating fishing villages, and dramatic karst formations.",
+    history: "Legend attributes the bay's formation to a dragon that plunged into the sea, its thrashing tail carving out the valleys and islands.",
+    culture: "Home to floating fishing villages where communities have lived on the water for generations.",
+    bestTimeToVisit: "October to December for clear skies and comfortable temperatures.",
+    nearbyAttractions: ["Sung Sot Cave", "Cat Ba Island", "Ti Top Island"],
+    restaurants: ["Cua Vang Restaurant", "Floating restaurants of Cua Van village"],
+    hotels: ["Paradise Elegance Cruise", "Vinpearl Resort Ha Long"],
+    travelTips: ["Book a multi-day overnight cruise for the full experience", "Bring motion sickness remedies for boat trips", "Visit lesser-known bays like Lan Ha to avoid crowds"]
+  },
+  {
+    id: "dest-16",
+    name: "Great Wall of China",
+    country: "China",
+    category: "Heritage",
+    images: [
+      "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&q=80&w=1000"
+    ],
+    rating: 4.8,
+    shortDescription: "An ancient fortification winding across mountains for thousands of miles.",
+    longDescription: "The Great Wall of China is a series of fortifications built across the historical northern borders of China to protect against invasions. Stretching over 13,000 miles in total, well-preserved sections like Mutianyu and Jinshanling offer dramatic views over forested mountain ridges.",
+    history: "Construction began as early as the 7th century BC, with major expansions under the Qin and Ming dynasties over the following centuries.",
+    culture: "A national symbol of China's history and engineering, representing centuries of dynastic ambition and defense.",
+    bestTimeToVisit: "April to June or September to November for mild weather and fewer crowds.",
+    nearbyAttractions: ["Mutianyu Section", "Ming Tombs", "Jinshanling Section"],
+    restaurants: ["Schoolhouse at Mutianyu", "The Great Wall Box House"],
+    hotels: ["Commune by the Great Wall", "Brickyard Eco-Retreat"],
+    travelTips: ["Choose a less crowded section like Jinshanling for a quieter visit", "Take the cable car if hiking steep sections is difficult", "Visit on a weekday to avoid tour groups"]
   }
 ];
 
