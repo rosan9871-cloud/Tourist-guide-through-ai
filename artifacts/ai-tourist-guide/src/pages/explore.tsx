@@ -5,12 +5,14 @@ import { Search, Heart, Star, MapPin } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { destinations } from '@/lib/data';
 import { useAuth } from '@/lib/auth';
+import { useLanguage } from '@/lib/language';
 
 const categories = ['All', ...Array.from(new Set(destinations.map((d) => d.category)))];
 
 export default function Explore() {
   const [, setLocation] = useLocation();
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('All');
   const [favorites, setFavorites] = useState<string[]>(() => {
@@ -54,10 +56,10 @@ export default function Explore() {
             className="max-w-2xl"
           >
             <h1 className="text-4xl md:text-6xl font-display font-bold mb-4 tracking-tight">
-              Explore the world
+              {t('explore_title')}
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8">
-              Search destinations, filter by category, and save the places calling your name.
+              {t('explore_subtitle')}
             </p>
           </motion.div>
 
@@ -71,7 +73,7 @@ export default function Explore() {
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search destinations or countries..."
+              placeholder={t('explore_search_placeholder')}
               className="h-14 pl-12 text-lg rounded-full shadow-sm"
             />
           </motion.div>

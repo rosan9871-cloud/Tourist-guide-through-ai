@@ -6,10 +6,12 @@ import { destinations } from '@/lib/data';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/lib/auth';
 import { Badge } from '@/components/ui/badge';
+import { useLanguage } from '@/lib/language';
 
 export default function DestinationPage({ params }: { params: { id: string } }) {
   const [, setLocation] = useLocation();
   const { user } = useAuth();
+  const { t } = useLanguage();
   const dest = destinations.find(d => d.id === params.id);
   
   const [isFavorite, setIsFavorite] = useState(() => {
@@ -85,19 +87,19 @@ export default function DestinationPage({ params }: { params: { id: string } }) 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <section className="bg-card/50 p-6 rounded-3xl border border-border/50">
                 <Compass className="h-8 w-8 text-primary mb-4" />
-                <h3 className="text-xl font-bold mb-2">History & Culture</h3>
+                <h3 className="text-xl font-bold mb-2">{t('destination_history')} & {t('destination_culture')}</h3>
                 <p className="text-muted-foreground mb-4">{dest.history}</p>
                 <p className="text-muted-foreground">{dest.culture}</p>
               </section>
               <section className="bg-card/50 p-6 rounded-3xl border border-border/50">
                 <Calendar className="h-8 w-8 text-primary mb-4" />
-                <h3 className="text-xl font-bold mb-2">When to Visit</h3>
+                <h3 className="text-xl font-bold mb-2">{t('destination_bestTime')}</h3>
                 <p className="text-muted-foreground">{dest.bestTimeToVisit}</p>
               </section>
             </div>
 
             <section>
-              <h2 className="text-3xl font-display font-bold mb-6">Nearby Attractions</h2>
+              <h2 className="text-3xl font-display font-bold mb-6">{t('destination_nearby')}</h2>
               <div className="flex flex-wrap gap-3">
                 {dest.nearbyAttractions.map(attr => (
                   <div key={attr} className="px-4 py-2 rounded-full bg-secondary/10 text-secondary-foreground text-sm font-medium border border-secondary/20">
@@ -110,7 +112,7 @@ export default function DestinationPage({ params }: { params: { id: string } }) 
 
           <div className="space-y-8">
             <div className="bg-card p-6 rounded-3xl border border-border shadow-sm">
-              <h3 className="text-xl font-bold mb-6 flex items-center"><Utensils className="mr-2 h-5 w-5 text-primary" /> Top Restaurants</h3>
+              <h3 className="text-xl font-bold mb-6 flex items-center"><Utensils className="mr-2 h-5 w-5 text-primary" /> {t('destination_restaurants')}</h3>
               <ul className="space-y-4">
                 {dest.restaurants.map(rest => (
                   <li key={rest} className="flex items-center text-muted-foreground">
@@ -122,7 +124,7 @@ export default function DestinationPage({ params }: { params: { id: string } }) 
             </div>
             
             <div className="bg-card p-6 rounded-3xl border border-border shadow-sm">
-              <h3 className="text-xl font-bold mb-6 flex items-center"><Bed className="mr-2 h-5 w-5 text-primary" /> Where to Stay</h3>
+              <h3 className="text-xl font-bold mb-6 flex items-center"><Bed className="mr-2 h-5 w-5 text-primary" /> {t('destination_hotels')}</h3>
               <ul className="space-y-4">
                 {dest.hotels.map(hotel => (
                   <li key={hotel} className="flex items-center text-muted-foreground">
@@ -134,7 +136,7 @@ export default function DestinationPage({ params }: { params: { id: string } }) 
             </div>
 
             <div className="bg-card p-6 rounded-3xl border border-border shadow-sm">
-              <h3 className="text-xl font-bold mb-6 flex items-center"><Compass className="mr-2 h-5 w-5 text-primary" /> Local Tips</h3>
+              <h3 className="text-xl font-bold mb-6 flex items-center"><Compass className="mr-2 h-5 w-5 text-primary" /> {t('destination_tips')}</h3>
               <ul className="space-y-4">
                 {dest.travelTips.map(tip => (
                   <li key={tip} className="flex items-start text-muted-foreground text-sm">

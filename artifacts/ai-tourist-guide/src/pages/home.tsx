@@ -4,9 +4,11 @@ import { ArrowRight, Compass, Map, Camera, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { destinations } from '@/lib/data';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/lib/language';
 
 export default function Home() {
   const [, setLocation] = useLocation();
+  const { t } = useLanguage();
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -20,8 +22,8 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            See the world with a <br className="hidden md:block"/>
-            <span className="text-primary">local friend in your pocket.</span>
+            {t('home_hero_title1')} <br className="hidden md:block"/>
+            <span className="text-primary">{t('home_hero_title2')}</span>
           </motion.h1>
           <motion.p 
             className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto"
@@ -29,7 +31,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            Wanderlens uses AI to tell you the stories behind landmarks, craft perfect itineraries, and guide you through new cities.
+            {t('home_hero_subtitle')}
           </motion.p>
           <motion.div 
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
@@ -38,10 +40,10 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <Button size="lg" className="w-full sm:w-auto h-14 px-8 text-lg rounded-full shadow-lg hover:shadow-xl transition-all" onClick={() => setLocation('/explore')}>
-              Start Exploring <ArrowRight className="ml-2 h-5 w-5" />
+              {t('home_cta_explore')} <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
             <Button size="lg" variant="outline" className="w-full sm:w-auto h-14 px-8 text-lg rounded-full" onClick={() => setLocation('/camera')}>
-              <Camera className="mr-2 h-5 w-5" /> Try AI Camera
+              <Camera className="mr-2 h-5 w-5" /> {t('home_cta_camera')}
             </Button>
           </motion.div>
         </div>
@@ -51,14 +53,14 @@ export default function Home() {
       <section className="py-24 bg-card/50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Everything you need to wander</h2>
-            <p className="text-lg text-muted-foreground max-w-xl mx-auto">One app that combines discovery, planning, and on-the-ground guidance.</p>
+            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">{t('home_features_title')}</h2>
+            <p className="text-lg text-muted-foreground max-w-xl mx-auto">{t('home_features_subtitle')}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { title: 'AI Camera', icon: Camera, desc: 'Point at any landmark to instantly learn its history, architecture, and hidden secrets.' },
-              { title: 'Smart Planner', icon: Map, desc: 'Generate day-by-day itineraries tailored to your budget, time, and travel style.' },
-              { title: 'Local Guide', icon: MessageSquare, desc: 'Chat with an AI that knows the city like a local. Ask anything, anytime.' },
+              { title: t('home_feature_camera_title'), icon: Camera, desc: t('home_feature_camera_desc') },
+              { title: t('home_feature_planner_title'), icon: Map, desc: t('home_feature_planner_desc') },
+              { title: t('home_feature_guide_title'), icon: MessageSquare, desc: t('home_feature_guide_desc') },
             ].map((f, i) => (
               <motion.div 
                 key={i} 
@@ -84,11 +86,11 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-end mb-12">
             <div>
-              <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Trending Destinations</h2>
-              <p className="text-lg text-muted-foreground">Places our community is exploring right now.</p>
+              <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">{t('home_trending_title')}</h2>
+              <p className="text-lg text-muted-foreground">{t('home_trending_subtitle')}</p>
             </div>
             <Button variant="ghost" onClick={() => setLocation('/explore')} className="hidden sm:flex">
-              View all <ArrowRight className="ml-2 h-4 w-4" />
+              {t('common_viewAll')} <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
           
@@ -116,7 +118,7 @@ export default function Home() {
             ))}
           </div>
           <Button variant="ghost" onClick={() => setLocation('/explore')} className="w-full mt-8 sm:hidden">
-            View all <ArrowRight className="ml-2 h-4 w-4" />
+            {t('common_viewAll')} <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
       </section>
@@ -128,7 +130,7 @@ export default function Home() {
             <Compass className="h-6 w-6 text-primary" />
             <span className="font-display text-2xl font-bold">Wanderlens</span>
           </div>
-          <p className="mb-6">Your AI-powered tourist companion. College capstone project.</p>
+          <p className="mb-6">{t('home_footer_tagline')}</p>
           <p className="text-sm">© {new Date().getFullYear()} Wanderlens. All rights reserved.</p>
         </div>
       </footer>

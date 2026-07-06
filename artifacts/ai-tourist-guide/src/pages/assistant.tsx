@@ -12,14 +12,14 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { chatStarterQuestions } from '@/lib/data';
 import { useAuth } from '@/lib/auth';
+import { useLanguage } from '@/lib/language';
+import { languages as appLanguages } from '@/lib/i18n';
 
 type Message = {
   id: string;
   role: 'user' | 'assistant';
   text: string;
 };
-
-const languages = ['English', 'Spanish', 'French', 'Japanese'];
 
 const dummyReplies = [
   "Great question! Based on what locals recommend, I'd suggest starting early in the morning to beat the crowds and the heat.",
@@ -35,7 +35,8 @@ function makeReply() {
 
 export default function Assistant() {
   const { user } = useAuth();
-  const [language, setLanguage] = useState('English');
+  const { t } = useLanguage();
+  const [chatLanguage, setChatLanguage] = useState(appLanguages[0].label);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -79,20 +80,20 @@ export default function Assistant() {
               <Bot className="h-6 w-6 text-primary" />
             </div>
             <div>
-              <h1 className="text-2xl font-display font-bold">AI Travel Guide</h1>
-              <p className="text-sm text-muted-foreground">Your local friend, available 24/7</p>
+              <h1 className="text-2xl font-display font-bold">{t('assistant_title')}</h1>
+              <p className="text-sm text-muted-foreground">{t('assistant_subtitle')}</p>
             </div>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="gap-2">
-                <Globe className="h-4 w-4" /> {language}
+                <Globe className="h-4 w-4" /> {chatLanguage}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              {languages.map((lang) => (
-                <DropdownMenuItem key={lang} onClick={() => setLanguage(lang)}>
-                  {lang}
+              {appLanguages.map((lang) => (
+                <DropdownMenuItem key={lang.code} onClick={() => setChatLanguage(lang.label)}>
+                  {lang.flag} {lang.label}
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>

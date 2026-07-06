@@ -32,6 +32,7 @@ import {
   Plane,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/lib/language';
 
 const interestOptions = [
   { id: 'food', label: 'Food & Dining', icon: Utensils },
@@ -87,6 +88,7 @@ export default function Planner() {
   const { user } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const [tripName, setTripName] = useState('');
   const [destinationId, setDestinationId] = useState<string>('');
@@ -211,8 +213,8 @@ export default function Planner() {
           <div className="h-14 w-14 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
             <Sparkles className="h-7 w-7 text-primary" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">AI Trip Planner</h1>
-          <p className="text-xl text-muted-foreground">Design a personalized, day-by-day itinerary in seconds.</p>
+          <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">{t('planner_title')}</h1>
+          <p className="text-xl text-muted-foreground">{t('planner_subtitle')}</p>
         </div>
 
         {!generatedPlan ? (

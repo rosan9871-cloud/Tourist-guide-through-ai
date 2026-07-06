@@ -3,6 +3,8 @@ import { Link, useLocation } from 'wouter';
 import { Camera, Map, MessageSquare, Compass, User, LogOut, Moon, Sun, Menu } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { useAuth } from '@/lib/auth';
+import { useLanguage } from '@/lib/language';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -16,13 +18,14 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 export function Navbar() {
   const { theme, setTheme } = useTheme();
   const { user, logout } = useAuth();
+  const { t } = useLanguage();
   const [location] = useLocation();
 
   const links = [
-    { href: '/explore', label: 'Explore', icon: Compass },
-    { href: '/camera', label: 'AI Camera', icon: Camera },
-    { href: '/assistant', label: 'Guide', icon: MessageSquare },
-    { href: '/planner', label: 'Planner', icon: Map },
+    { href: '/explore', label: t('nav_explore'), icon: Compass },
+    { href: '/camera', label: t('nav_camera'), icon: Camera },
+    { href: '/assistant', label: t('nav_guide'), icon: MessageSquare },
+    { href: '/planner', label: t('nav_planner'), icon: Map },
   ];
 
   return (
@@ -59,6 +62,7 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-4">
+          <LanguageSwitcher />
           <Button
             variant="ghost"
             size="icon"
@@ -96,17 +100,17 @@ export function Navbar() {
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={logout} className="text-destructive focus:text-destructive">
                   <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
+                  <span>{t('nav_logout')}</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <div className="hidden md:flex gap-2">
               <Button variant="ghost" asChild>
-                <Link href="/login">Log in</Link>
+                <Link href="/login">{t('nav_login')}</Link>
               </Button>
               <Button asChild>
-                <Link href="/register">Sign up</Link>
+                <Link href="/register">{t('nav_signup')}</Link>
               </Button>
             </div>
           )}
@@ -137,13 +141,16 @@ export function Navbar() {
                   {!user && (
                     <div className="flex flex-col gap-2 mt-4 pt-4 border-t">
                       <Button variant="outline" asChild className="justify-start">
-                        <Link href="/login">Log in</Link>
+                        <Link href="/login">{t('nav_login')}</Link>
                       </Button>
                       <Button asChild className="justify-start">
-                        <Link href="/register">Sign up</Link>
+                        <Link href="/register">{t('nav_signup')}</Link>
                       </Button>
                     </div>
                   )}
+                  <div className="pt-4 border-t">
+                    <LanguageSwitcher variant="full" />
+                  </div>
                 </nav>
               </SheetContent>
             </Sheet>

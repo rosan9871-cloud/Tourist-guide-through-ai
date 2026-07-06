@@ -18,9 +18,10 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { dummyCameraResult } from '@/lib/data';
+import { cameraResultPool, type CameraResult } from '@/lib/data';
 import { useAuth } from '@/lib/auth';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/lib/language';
 
 type Status = 'idle' | 'analyzing' | 'result';
 type Mode = 'choose' | 'live' | 'preview';
@@ -29,6 +30,7 @@ export default function CameraPage() {
   const [, setLocation] = useLocation();
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -40,6 +42,7 @@ export default function CameraPage() {
   const [facingMode, setFacingMode] = useState<'environment' | 'user'>('environment');
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [isStreamReady, setIsStreamReady] = useState(false);
+  const [result, setResult] = useState<CameraResult>(cameraResultPool[0]);
 
   const stopStream = () => {
     streamRef.current?.getTracks().forEach((track) => track.stop());
@@ -119,14 +122,16 @@ export default function CameraPage() {
 
   const analyze = () => {
     setStatus('analyzing');
+    const picked = cameraResultPool[Math.floor(Math.random() * cameraResultPool.length)];
     setTimeout(() => {
+      setResult(picked);
       setStatus('result');
       if (user) {
         const saved = localStorage.getItem('wanderlens_scans');
         const scans = saved ? JSON.parse(saved) : [];
         scans.unshift({
           id: Math.random().toString(36).slice(2, 9),
-          name: dummyCameraResult.landmarkName,
+          name: picked.landmarkName,
           date: new Date().toISOString(),
         });
         localStorage.setItem('wanderlens_scans', JSON.stringify(scans.slice(0, 20)));
@@ -154,10 +159,10 @@ export default function CameraPage() {
               <CameraIcon className="h-8 w-8 text-primary" />
             </div>
             <h1 className="text-4xl md:text-6xl font-display font-bold mb-4 tracking-tight">
-              AI Camera
+              {t('camera_title')}
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto">
-              Snap a live photo or upload one of any landmark and let our AI tell you its story.
+              {t('camera_subtitle')}
             </p>
           </motion.div>
         </div>
@@ -185,10 +190,10 @@ export default function CameraPage() {
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3">
                       <Button onClick={openLiveCamera}>
-                        <Video className="mr-2 h-4 w-4" /> Open Camera
+                        <Video className="mr-2 h-4 w-4" /> {t('camera_open')}
                       </Button>
                       <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
-                        <Upload className="mr-2 h-4 w-4" /> Upload Photo
+                        <Upload className="mr-2 h-4 w-4" /> {t('camera_upload')}
                       </Button>
                     </div>
                     <input
@@ -253,10 +258,10 @@ export default function CameraPage() {
                         onClick={capturePhoto}
                         disabled={!isStreamReady}
                       >
-                        <CameraIcon className="mr-2 h-5 w-5" /> Capture Photo
+                        <CameraIcon className="mr-2 h-5 w-5" /> {t('camera_capture')}
                       </Button>
                       <Button size="lg" variant="outline" className="h-14 rounded-xl" onClick={() => fileInputRef.current?.click()}>
-                        <Upload className="mr-2 h-4 w-4" /> Upload Instead
+                        <Upload className="mr-2 h-4 w-4" /> {t('camera_upload')}
                       </Button>
                     </div>
                     <input
@@ -291,11 +296,11 @@ export default function CameraPage() {
                       >
                         {status === 'analyzing' ? (
                           <>
-                            <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Analyzing...
+                            <Loader2 className="mr-2 h-5 w-5 animate-spin" /> {t('camera_analyzing')}
                           </>
                         ) : (
                           <>
-                            <Sparkles className="mr-2 h-5 w-5" /> Analyze Photo
+                            <Sparkles className="mr-2 h-5 w-5" /> {t('camera_analyze')}
                           </>
                         )}
                       </Button>
@@ -310,7 +315,7 @@ export default function CameraPage() {
                         }}
                         disabled={status === 'analyzing'}
                       >
-                        <RotateCcw className="mr-2 h-4 w-4" /> Retake
+                        <RotateCcw className="mr-2 h-4 w-4" /> {t('camera_retake')}
                       </Button>
                     </div>
                   </div>
@@ -331,35 +336,53 @@ export default function CameraPage() {
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                   <Badge className="bg-primary/90 border-none mb-3">Identified</Badge>
                   <h2 className="text-3xl md:text-4xl font-display font-bold">
-                    {dummyCameraResult.landmarkName}
+                    {result.landmarkName}
                   </h2>
+                  <p className="text-white/80 flex items-center mt-1">
+                    <MapPin className="h-4 w-4 mr-1.5" /> {result.country} • {result.coordinates}
+                  </p>
                 </div>
               </div>
 
               <div className="bg-card border border-border rounded-3xl p-6 md:p-8 shadow-sm">
-                <p className="text-lg text-muted-foreground mb-6">{dummyCameraResult.summary}</p>
+                <p className="text-lg text-muted-foreground mb-6">{result.summary}</p>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                  <div className="bg-muted/30 rounded-2xl p-4">
+                    <h3 className="text-xs font-bold uppercase tracking-wide text-primary mb-1">{t('camera_bestTime')}</h3>
+                    <p className="text-sm text-muted-foreground">{result.bestTimeToVisit}</p>
+                  </div>
+                  <div className="bg-muted/30 rounded-2xl p-4">
+                    <h3 className="text-xs font-bold uppercase tracking-wide text-primary mb-1">{t('camera_entryFee')}</h3>
+                    <p className="text-sm text-muted-foreground">{result.entryFee}</p>
+                  </div>
+                  <div className="bg-muted/30 rounded-2xl p-4">
+                    <h3 className="text-xs font-bold uppercase tracking-wide text-primary mb-1">{t('camera_hours')}</h3>
+                    <p className="text-sm text-muted-foreground">{result.openingHours}</p>
+                  </div>
+                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   <div className="bg-muted/30 rounded-2xl p-5">
                     <h3 className="font-bold mb-2 flex items-center">
-                      <BookOpen className="h-4 w-4 mr-2 text-primary" /> History
+                      <BookOpen className="h-4 w-4 mr-2 text-primary" /> {t('camera_history')}
                     </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{dummyCameraResult.history}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{result.history}</p>
                   </div>
                   <div className="bg-muted/30 rounded-2xl p-5">
                     <h3 className="font-bold mb-2 flex items-center">
-                      <Landmark className="h-4 w-4 mr-2 text-primary" /> Architecture
+                      <Landmark className="h-4 w-4 mr-2 text-primary" /> {t('camera_architecture')}
                     </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{dummyCameraResult.architecture}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{result.architecture}</p>
                   </div>
                 </div>
 
                 <div className="mb-6">
                   <h3 className="font-bold mb-3 flex items-center">
-                    <Sparkles className="h-4 w-4 mr-2 text-primary" /> Interesting Facts
+                    <Sparkles className="h-4 w-4 mr-2 text-primary" /> {t('camera_facts')}
                   </h3>
                   <ul className="space-y-2">
-                    {dummyCameraResult.interestingFacts.map((fact) => (
+                    {result.interestingFacts.map((fact) => (
                       <li key={fact} className="flex items-start text-sm text-muted-foreground">
                         <div className="h-1.5 w-1.5 rounded-full bg-primary mt-2 mr-3 shrink-0" />
                         {fact}
@@ -371,10 +394,10 @@ export default function CameraPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                   <div>
                     <h3 className="font-bold mb-3 flex items-center">
-                      <MapPin className="h-4 w-4 mr-2 text-primary" /> Nearby Places
+                      <MapPin className="h-4 w-4 mr-2 text-primary" /> {t('camera_nearby')}
                     </h3>
                     <div className="flex flex-wrap gap-2">
-                      {dummyCameraResult.nearbyPlaces.map((p) => (
+                      {result.nearbyPlaces.map((p) => (
                         <span key={p} className="px-3 py-1 rounded-full bg-secondary/10 text-secondary-foreground text-xs font-medium border border-secondary/20">
                           {p}
                         </span>
@@ -383,12 +406,12 @@ export default function CameraPage() {
                   </div>
                   <div>
                     <h3 className="font-bold mb-3 flex items-center">
-                      <Lightbulb className="h-4 w-4 mr-2 text-primary" /> Travel Tips
+                      <Lightbulb className="h-4 w-4 mr-2 text-primary" /> {t('camera_tips')}
                     </h3>
                     <ul className="space-y-1">
-                      {dummyCameraResult.travelTips.map((t) => (
-                        <li key={t} className="text-xs text-muted-foreground">
-                          • {t}
+                      {result.travelTips.map((tip) => (
+                        <li key={tip} className="text-xs text-muted-foreground">
+                          • {tip}
                         </li>
                       ))}
                     </ul>
@@ -397,7 +420,7 @@ export default function CameraPage() {
 
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Button size="lg" className="flex-1 h-12 rounded-xl" onClick={reset}>
-                    <CameraIcon className="mr-2 h-4 w-4" /> Scan Another
+                    <CameraIcon className="mr-2 h-4 w-4" /> {t('camera_scanAnother')}
                   </Button>
                   <Button
                     size="lg"
@@ -411,7 +434,7 @@ export default function CameraPage() {
                       toast({ title: 'Saved to your dashboard', description: 'Find this scan under Recent Scans.' });
                     }}
                   >
-                    Save to Dashboard
+                    {t('camera_saveToDashboard')}
                   </Button>
                 </div>
               </div>

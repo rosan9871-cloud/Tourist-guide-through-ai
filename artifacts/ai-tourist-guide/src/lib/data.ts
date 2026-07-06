@@ -326,19 +326,139 @@ export const destinations: Destination[] = [
   }
 ];
 
-export const dummyCameraResult = {
-  landmarkName: "The Colosseum",
-  summary: "An oval amphitheatre in the centre of the city of Rome, Italy.",
-  history: "Commissioned around A.D. 70-72 by Emperor Vespasian of the Flavian dynasty as a gift to the Roman people. In A.D. 80, Vespasian's son Titus opened the Colosseum with 100 days of games.",
-  architecture: "Made of travertine limestone, tuff, and brick-faced concrete. It was the largest amphitheatre ever built at the time.",
-  interestingFacts: [
-    "It could hold an estimated 50,000 to 80,000 spectators.",
-    "Mock sea battles were occasionally held there.",
-    "It has over 80 entrances."
-  ],
-  nearbyPlaces: ["Roman Forum", "Palatine Hill", "Pantheon"],
-  travelTips: ["Visit early morning or late afternoon to avoid crowds.", "Buy tickets online in advance."]
+export type CameraResult = {
+  landmarkName: string;
+  country: string;
+  coordinates: string;
+  summary: string;
+  history: string;
+  architecture: string;
+  interestingFacts: string[];
+  nearbyPlaces: string[];
+  travelTips: string[];
+  bestTimeToVisit: string;
+  entryFee: string;
+  openingHours: string;
 };
+
+export const cameraResultPool: CameraResult[] = [
+  {
+    landmarkName: "The Colosseum",
+    country: "Italy",
+    coordinates: "41.8902° N, 12.4922° E",
+    summary: "An oval amphitheatre in the centre of Rome, the largest ancient amphitheatre ever built and still the largest standing today.",
+    history: "Commissioned around A.D. 70-72 by Emperor Vespasian of the Flavian dynasty as a gift to the Roman people. In A.D. 80, Vespasian's son Titus opened the Colosseum with 100 days of games, and it remained in active use for almost 500 years.",
+    architecture: "Made of travertine limestone, volcanic tuff, and brick-faced concrete, standing 4 stories and roughly 189 by 156 meters. It used a sophisticated system of vaults, arches, and a retractable awning (velarium) to shade spectators.",
+    interestingFacts: [
+      "It could hold an estimated 50,000 to 80,000 spectators.",
+      "Mock sea battles (naumachiae) were occasionally staged there by flooding the arena.",
+      "It has over 80 entrances, allowing the entire crowd to be seated in about 15 minutes.",
+      "Roughly two-thirds of the original structure has been destroyed over the centuries by earthquakes and stone-robbers."
+    ],
+    nearbyPlaces: ["Roman Forum", "Palatine Hill", "Arch of Constantine", "Pantheon"],
+    travelTips: ["Visit early morning or late afternoon to avoid crowds.", "Buy tickets online in advance to skip the ticket line.", "Combine your visit with the Roman Forum, included in the same ticket."],
+    bestTimeToVisit: "April-May or September-October for mild weather and fewer tourists.",
+    entryFee: "€18 (combined with Roman Forum & Palatine Hill), free on first Sunday of the month.",
+    openingHours: "Daily, 9:00 AM until 1 hour before sunset."
+  },
+  {
+    landmarkName: "Eiffel Tower",
+    country: "France",
+    coordinates: "48.8584° N, 2.2945° E",
+    summary: "A 330-meter wrought-iron lattice tower on the Champ de Mars in Paris, the most-visited paid monument in the world.",
+    history: "Designed by engineer Gustave Eiffel's company and built for the 1889 World's Fair to mark the centennial of the French Revolution. It was initially criticized by artists and intellectuals but became a global icon within a few decades.",
+    architecture: "Built from over 18,000 individual wrought-iron pieces held together by 2.5 million rivets. It weighs approximately 10,100 tonnes and was the tallest man-made structure in the world for 41 years.",
+    interestingFacts: [
+      "It grows about 15 cm taller in summer as the iron expands in the heat.",
+      "It was almost demolished in 1909 but was saved because it proved useful as a radio transmission tower.",
+      "It is repainted every 7 years, using about 60 tonnes of paint.",
+      "There are three levels open to visitors, with a restaurant on the first and second floors."
+    ],
+    nearbyPlaces: ["Trocadéro", "Champ de Mars", "Musée du Quai Branly", "Pont d'Iéna"],
+    travelTips: ["Book tickets online for a specific time slot to avoid long queues.", "Visit at night to see the hourly sparkling light show.", "Climb the stairs to the second floor for a cheaper, more scenic option."],
+    bestTimeToVisit: "June is warm with long daylight hours; visit at dawn or dusk for smaller crowds.",
+    entryFee: "€18.80-€29.40 depending on level and lift vs. stairs.",
+    openingHours: "Daily, 9:30 AM - 11:45 PM (extended summer hours)."
+  },
+  {
+    landmarkName: "Taj Mahal",
+    country: "India",
+    coordinates: "27.1751° N, 78.0421° E",
+    summary: "An ivory-white marble mausoleum on the bank of the Yamuna river in Agra, widely regarded as the finest example of Mughal architecture.",
+    history: "Commissioned in 1632 by Mughal emperor Shah Jahan to house the tomb of his favorite wife, Mumtaz Mahal, who died during childbirth. It took roughly 20 years and around 20,000 artisans to complete.",
+    architecture: "Combines elements of Persian, Islamic, and Indian architectural styles, built primarily of white marble inlaid with semi-precious stones in intricate floral patterns, topped by a large central dome and four minarets.",
+    interestingFacts: [
+      "It appears to change color throughout the day — pinkish in the morning, white in the evening, golden under moonlight.",
+      "The four minarets lean slightly outward, designed to fall away from the tomb in case of an earthquake.",
+      "It was designated a UNESCO World Heritage Site in 1983.",
+      "The complex also includes a mosque, guest house, and formal gardens laid out in a classic Persian charbagh design."
+    ],
+    nearbyPlaces: ["Agra Fort", "Mehtab Bagh", "Itmad-ud-Daulah's Tomb", "Fatehpur Sikri"],
+    travelTips: ["Arrive at sunrise both to beat the heat and the crowds.", "Fridays are closed to tourists (reserved for prayers).", "View it from across the river at Mehtab Bagh for a quieter, iconic photo."],
+    bestTimeToVisit: "October to March for cooler, comfortable temperatures.",
+    entryFee: "₹1,100 for foreign tourists (includes small water bottle and shoe covers).",
+    openingHours: "Daily except Friday, 6:00 AM - 6:30 PM."
+  },
+  {
+    landmarkName: "Great Wall of China",
+    country: "China",
+    coordinates: "40.4319° N, 116.5704° E",
+    summary: "A series of fortifications built across the historical northern borders of China, stretching for thousands of miles across mountains, deserts, and grasslands.",
+    history: "Construction began as early as the 7th century BC by various states, with major unification and expansion under the Qin Dynasty (around 221 BC) and the most well-preserved sections built during the Ming Dynasty (1368-1644).",
+    architecture: "Built from rammed earth, wood, brick, and stone depending on the era and region, featuring watchtowers, garrison stations, and signal towers spaced along its length for defense and communication.",
+    interestingFacts: [
+      "Contrary to popular belief, it is not visible to the naked eye from space.",
+      "The total length of all the wall's sections, including branches, is estimated at over 21,000 km.",
+      "It was built and rebuilt over roughly 2,000 years by multiple dynasties.",
+      "The Mutianyu and Badaling sections near Beijing are the most visited and best restored."
+    ],
+    nearbyPlaces: ["Mutianyu Section", "Ming Tombs", "Jinshanling Section", "Badaling"],
+    travelTips: ["Choose a less crowded section like Jinshanling or Simatai for a quieter visit.", "Take the cable car up if hiking steep sections is difficult.", "Visit on a weekday to avoid large tour groups."],
+    bestTimeToVisit: "April to June or September to November for mild weather.",
+    entryFee: "¥40-¥180 depending on the section visited.",
+    openingHours: "Daily, roughly 7:30 AM - 5:30 PM (varies by section and season)."
+  },
+  {
+    landmarkName: "Machu Picchu",
+    country: "Peru",
+    coordinates: "13.1631° S, 72.5450° W",
+    summary: "A 15th-century Inca citadel set on a mountain ridge 2,430 meters above sea level in the Andes, one of the New Seven Wonders of the World.",
+    history: "Built around 1450 as a royal estate or sacred religious site for the Inca emperor Pachacuti, then abandoned roughly a century later during the Spanish conquest. It remained largely unknown to the outside world until American historian Hiram Bingham brought international attention to it in 1911.",
+    architecture: "A marvel of Inca engineering, built without mortar using precisely cut polished dry-stone walls that interlock so tightly a knife blade can't fit between blocks. The site includes temples, terraces for agriculture, and an advanced water channel system.",
+    interestingFacts: [
+      "The complex has over 150 buildings, including baths, houses, temples, and sanctuaries.",
+      "It sits directly on two fault lines, and Inca stonework may have been designed to flex and resettle during earthquakes.",
+      "The Inca Trail, a multi-day trek, is one of the most famous ways to arrive at the site.",
+      "It was named a UNESCO World Heritage Site in 1983 and a New Seven Wonder of the World in 2007."
+    ],
+    nearbyPlaces: ["Inca Trail", "Sacred Valley", "Cusco", "Huayna Picchu"],
+    travelTips: ["Book tickets and any Huayna Picchu add-on well in advance — daily visitor numbers are capped.", "Acclimatize to the altitude in Cusco for a few days first.", "Hire a local guide for context you won't get from signage alone."],
+    bestTimeToVisit: "April to October (dry season) for the clearest views.",
+    entryFee: "Around $45-$65 USD depending on circuit and mountain add-ons.",
+    openingHours: "Daily, 6:00 AM - 5:30 PM, entry by timed slot."
+  },
+  {
+    landmarkName: "Statue of Liberty",
+    country: "United States",
+    coordinates: "40.6892° N, 74.0445° W",
+    summary: "A colossal neoclassical copper statue on Liberty Island in New York Harbor, a universal symbol of freedom and democracy.",
+    history: "A gift from the people of France to the United States, designed by sculptor Frédéric Auguste Bartholdi with an internal iron framework by Gustave Eiffel. It was dedicated on October 28, 1886.",
+    architecture: "Stands 93 meters tall from ground to torch, built from a thin copper sheet (about the thickness of two pennies) over a steel framework, which is why it has weathered to its iconic green patina from oxidation.",
+    interestingFacts: [
+      "The seven spikes on her crown represent the seven continents and seven seas.",
+      "A broken chain lies at her feet, symbolizing freedom from oppression, though it's rarely visible from photos.",
+      "The original torch was replaced in 1986 and is now displayed in the pedestal's museum.",
+      "It became a UNESCO World Heritage Site in 1984."
+    ],
+    nearbyPlaces: ["Ellis Island", "Battery Park", "Brooklyn Bridge", "One World Trade Center"],
+    travelTips: ["Book crown or pedestal access weeks in advance — it sells out fast.", "Take the early ferry to avoid the biggest crowds.", "Combine your trip with Ellis Island, included on the same ferry ticket."],
+    bestTimeToVisit: "Spring or fall for comfortable weather and clearer skies.",
+    entryFee: "$24.50 ferry ticket (includes Ellis Island); crown access requires separate advance reservation.",
+    openingHours: "Daily, 8:30 AM - 4:00 PM (ferry schedule varies seasonally)."
+  }
+];
+
+export const dummyCameraResult = cameraResultPool[0];
 
 export const chatStarterQuestions = [
   "What's the best local dish to try?",

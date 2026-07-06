@@ -7,10 +7,12 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Map, Heart, Camera, ChevronRight, LogOut } from 'lucide-react';
+import { useLanguage } from '@/lib/language';
 
 export default function Dashboard() {
   const { user, logout, isLoading } = useAuth();
   const [, setLocation] = useLocation();
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -49,7 +51,7 @@ export default function Dashboard() {
             <AvatarFallback className="text-2xl">{user.name.charAt(0)}</AvatarFallback>
           </Avatar>
           <div className="flex-1 text-center md:text-left">
-            <h1 className="text-3xl font-display font-bold mb-1">Hello, {user.name}</h1>
+            <h1 className="text-3xl font-display font-bold mb-1">{t('dashboard_title')} — {user.name}</h1>
             <p className="text-muted-foreground">{user.email}</p>
           </div>
           <Button variant="outline" className="text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/20" onClick={logout}>
