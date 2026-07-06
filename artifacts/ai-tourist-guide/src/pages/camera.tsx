@@ -1,0 +1,276 @@
+import React, { useRef, useState } from 'react';
+import { useLocation } from 'wouter';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Camera as CameraIcon,
+  Upload,
+  Loader2,
+  Sparkles,
+  MapPin,
+  Landmark,
+  Lightbulb,
+  RotateCcw,
+  BookOpen,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { dummyCameraResult } from '@/lib/data';
+import { useAuth } from '@/lib/auth';
+import { useToast } from '@/hooks/use-toast';
+
+type Status = 'idle' | 'analyzing' | 'result';
+
+export default function CameraPage() {
+  const [, setLocation] = useLocation();
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [status, setStatus] = useState<Status>('idle');
+  const [image, setImage] = useState<string | null>(null);
+
+  const handleFile = (file: File | undefined) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImage(reader.result as string);
+      setStatus('idle');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const analyze = () => {
+    setStatus('analyzing');
+    setTimeout(() => {
+      setStatus('result');
+      if (user) {
+        const saved = localStorage.getItem('wanderlens_scans');
+        const scans = saved ? JSON.parse(saved) : [];
+        scans.unshift({
+          id: Math.random().toString(36).slice(2, 9),
+          name: dummyCameraResult.landmarkName,
+          date: new Date().toISOString(),
+        });
+        localStorage.setItem('wanderlens_scans', JSON.stringify(scans.slice(0, 20)));
+      }
+    }, 2200);
+  };
+
+  const reset = () => {
+    setImage(null);
+    setStatus('idle');
+  };
+
+  return (
+    <div className="min-h-screen pb-24">
+      <section className="relative pt-20 pb-10 overflow-hidden">
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-background to-background" />
+        <div className="container mx-auto px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="h-16 w-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <CameraIcon className="h-8 w-8 text-primary" />
+            </div>
+            <h1 className="text-4xl md:text-6xl font-display font-bold mb-4 tracking-tight">
+              AI Camera
+            </h1>
+            <p className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto">
+              Snap or upload a photo of any landmark and let our AI tell you its story.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="container mx-auto px-4 max-w-3xl">
+        <AnimatePresence mode="wait">
+          {status !== 'result' ? (
+            <motion.div
+              key="capture"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}
+            >
+              <div className="bg-card border border-border rounded-3xl p-6 md:p-10 shadow-sm">
+                {!image ? (
+                  <div
+                    onClick={() => fileInputRef.current?.click()}
+                    className="cursor-pointer border-2 border-dashed border-border rounded-2xl aspect-video flex flex-col items-center justify-center text-center p-8 hover:border-primary/50 hover:bg-primary/5 transition-all"
+                  >
+                    <div className="h-16 w-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                      <Upload className="h-7 w-7 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-bold mb-2">Upload or capture a photo</h3>
+                    <p className="text-muted-foreground mb-6 max-w-sm">
+                      Drag a photo here, or tap to choose one from your device / camera.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          fileInputRef.current?.click();
+                        }}
+                      >
+                        <Upload className="mr-2 h-4 w-4" /> Choose Photo
+                      </Button>
+                    </div>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      capture="environment"
+                      className="hidden"
+                      onChange={(e) => handleFile(e.target.files?.[0])}
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <div className="relative rounded-2xl overflow-hidden aspect-video mb-6">
+                      <img src={image} alt="Captured landmark" className="w-full h-full object-cover" />
+                      {status === 'analyzing' && (
+                        <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-white">
+                          <Loader2 className="h-10 w-10 animate-spin mb-4" />
+                          <p className="font-medium text-lg">Analyzing landmark...</p>
+                          <p className="text-white/70 text-sm mt-1">Our AI is identifying details</p>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <Button
+                        size="lg"
+                        className="flex-1 h-14 text-lg rounded-xl"
+                        onClick={analyze}
+                        disabled={status === 'analyzing'}
+                      >
+                        {status === 'analyzing' ? (
+                          <>
+                            <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Analyzing...
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles className="mr-2 h-5 w-5" /> Analyze Photo
+                          </>
+                        )}
+                      </Button>
+                      <Button
+                        size="lg"
+                        variant="outline"
+                        className="h-14 rounded-xl"
+                        onClick={reset}
+                        disabled={status === 'analyzing'}
+                      >
+                        <RotateCcw className="mr-2 h-4 w-4" /> Retake
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="result"
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4 }}
+              className="space-y-6"
+            >
+              <div className="relative rounded-3xl overflow-hidden aspect-video">
+                {image && <img src={image} alt="Analyzed landmark" className="w-full h-full object-cover" />}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                  <Badge className="bg-primary/90 border-none mb-3">Identified</Badge>
+                  <h2 className="text-3xl md:text-4xl font-display font-bold">
+                    {dummyCameraResult.landmarkName}
+                  </h2>
+                </div>
+              </div>
+
+              <div className="bg-card border border-border rounded-3xl p-6 md:p-8 shadow-sm">
+                <p className="text-lg text-muted-foreground mb-6">{dummyCameraResult.summary}</p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <div className="bg-muted/30 rounded-2xl p-5">
+                    <h3 className="font-bold mb-2 flex items-center">
+                      <BookOpen className="h-4 w-4 mr-2 text-primary" /> History
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{dummyCameraResult.history}</p>
+                  </div>
+                  <div className="bg-muted/30 rounded-2xl p-5">
+                    <h3 className="font-bold mb-2 flex items-center">
+                      <Landmark className="h-4 w-4 mr-2 text-primary" /> Architecture
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{dummyCameraResult.architecture}</p>
+                  </div>
+                </div>
+
+                <div className="mb-6">
+                  <h3 className="font-bold mb-3 flex items-center">
+                    <Sparkles className="h-4 w-4 mr-2 text-primary" /> Interesting Facts
+                  </h3>
+                  <ul className="space-y-2">
+                    {dummyCameraResult.interestingFacts.map((fact) => (
+                      <li key={fact} className="flex items-start text-sm text-muted-foreground">
+                        <div className="h-1.5 w-1.5 rounded-full bg-primary mt-2 mr-3 shrink-0" />
+                        {fact}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                  <div>
+                    <h3 className="font-bold mb-3 flex items-center">
+                      <MapPin className="h-4 w-4 mr-2 text-primary" /> Nearby Places
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {dummyCameraResult.nearbyPlaces.map((p) => (
+                        <span key={p} className="px-3 py-1 rounded-full bg-secondary/10 text-secondary-foreground text-xs font-medium border border-secondary/20">
+                          {p}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="font-bold mb-3 flex items-center">
+                      <Lightbulb className="h-4 w-4 mr-2 text-primary" /> Travel Tips
+                    </h3>
+                    <ul className="space-y-1">
+                      {dummyCameraResult.travelTips.map((t) => (
+                        <li key={t} className="text-xs text-muted-foreground">
+                          • {t}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button size="lg" className="flex-1 h-12 rounded-xl" onClick={reset}>
+                    <CameraIcon className="mr-2 h-4 w-4" /> Scan Another
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="h-12 rounded-xl"
+                    onClick={() => {
+                      if (!user) {
+                        setLocation('/login');
+                        return;
+                      }
+                      toast({ title: 'Saved to your dashboard', description: 'Find this scan under Recent Scans.' });
+                    }}
+                  >
+                    Save to Dashboard
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </section>
+    </div>
+  );
+}

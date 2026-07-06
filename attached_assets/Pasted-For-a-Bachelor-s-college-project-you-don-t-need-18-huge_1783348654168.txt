@@ -1,0 +1,210 @@
+For a **Bachelor's college project**, you don't need 18 huge modules with enterprise-level features. A cleaner project with **10 focused modules** will be easier to build, present, and maintain while still looking impressive.
+
+---
+
+# **Project: AI Tourist Guide**
+
+## **Part 1 – Project Setup**
+
+```text
+Create a React + TypeScript + Vite project.
+
+Use:
+- Tailwind CSS
+- React Router
+- Framer Motion
+- Lucide React
+
+Set up:
+- Folder structure
+- Routing
+- Responsive layout
+- Dark/Light mode
+- Reusable UI components
+
+Frontend only.
+Use dummy data.
+```
+
+---
+
+## **Part 2 – Authentication**
+
+```text
+Build an authentication system.
+
+Pages:
+- Login
+- Register
+- Forgot Password
+
+Features:
+- Google Sign-In button (UI only)
+- Form validation
+- LocalStorage login
+- Logout
+
+Create a clean and modern UI.
+```
+
+---
+
+## **Part 3 – Home Page**
+
+```text
+Create a modern landing page.
+
+Include:
+- Hero section
+- Popular destinations
+- Features
+- About the app
+- Footer
+
+Use smooth animations and responsive design.
+```
+
+---
+
+## **Part 4 – Explore Destinations**
+
+```text
+Create an Explore page.
+
+Features:
+- Search destinations
+- Category filter
+- Destination cards
+- Favorite button
+
+Use dummy destination data.
+
+Clicking a card should open the details page.
+```
+
+---
+
+## **Part 5 – Destination Details**
+
+```text
+Create a destination details page.
+
+Display:
+- Images
+- History
+- Culture
+- Best time to visit
+- Nearby attractions
+- Restaurants
+- Hotels
+- Travel tips
+
+Use dummy data.
+```
+
+---
+
+## **Part 6 – AI Camera (Main Feature)**
+
+```text
+Create an AI Camera page.
+
+Features:
+- Upload or capture image
+- Preview image
+- Analyze button
+
+Display sample AI results:
+- Landmark name
+- History
+- Architecture
+- Interesting facts
+- Nearby places
+- Travel tips
+
+Use dummy AI data only.
+```
+
+---
+
+## **Part 7 – AI Travel Assistant**
+
+```text
+Create an AI chat page.
+
+Include:
+- Chat interface
+- Suggested questions
+- Voice button (UI only)
+- Dummy AI responses
+
+Add a language selector so responses appear in the selected language.
+```
+
+---
+
+## **Part 8 – Travel Planner**
+
+```text
+Create a travel planner.
+
+Users select:
+- Destination
+- Budget
+- Number of days
+
+Generate a sample travel itinerary using dummy data.
+```
+
+---
+
+## **Part 9 – User Dashboard**
+
+```text
+Create a dashboard.
+
+Show:
+- User profile
+- Favorite destinations
+- Saved travel plans
+- Camera scan history
+- Recently viewed places
+
+Use LocalStorage and dummy data.
+```
+
+---
+
+## **Part 10 – Final Polish**
+
+```text
+Improve the whole project.
+
+Focus on:
+- Responsive design
+- Smooth animations
+- Better UI
+- Loading states
+- 404 page
+- Accessibility
+- Code cleanup
+
+Keep the project frontend only and ready for future backend integration.
+```
+
+---
+
+# **Core Features**
+
+* 🔐 Login & Registration
+* 🌍 Multi-language support
+* 🗺️ Explore tourist destinations
+* 📖 Detailed place information
+* 📷 AI Camera for landmark recognition
+* 🤖 AI Travel Assistant
+* 📅 Simple travel planner
+* ❤️ Favorites
+* 👤 User dashboard
+* 🌙 Dark/Light mode
+
+This version is much more suitable for a bachelor's-level project: it showcases modern frontend skills, includes a unique AI Camera feature as the centerpiece, and avoids unnecessary enterprise features that add complexity without improving the educational value.

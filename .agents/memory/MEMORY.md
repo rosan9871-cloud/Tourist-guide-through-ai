@@ -1,0 +1,1 @@
+- [DESIGN subagent verification](design-subagent-verification.md) — subagent may claim pages/features are built when they're still stub placeholders; always screenshot/read files to verify.
