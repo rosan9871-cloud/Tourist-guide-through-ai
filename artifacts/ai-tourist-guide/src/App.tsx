@@ -19,6 +19,7 @@ import Register from "@/pages/register";
 import ForgotPassword from "@/pages/forgot-password";
 import Planner from "@/pages/planner";
 import Dashboard from "@/pages/dashboard";
+import MapPage from "@/pages/map";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ function Router() {
           <Route path="/assistant" component={Assistant} />
           <Route path="/planner" component={Planner} />
           <Route path="/dashboard" component={Dashboard} />
+          <Route path="/map" component={MapPage} />
           
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />

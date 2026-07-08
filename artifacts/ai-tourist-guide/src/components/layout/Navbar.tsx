@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'wouter';
-import { Camera, Map, MessageSquare, Compass, User, LogOut, Moon, Sun, Menu } from 'lucide-react';
+import { Camera, Map, MessageSquare, Compass, User, LogOut, Moon, Sun, Menu, Navigation } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { useAuth } from '@/lib/auth';
 import { useLanguage } from '@/lib/language';
@@ -26,6 +26,7 @@ export function Navbar() {
     { href: '/camera', label: t('nav_camera'), icon: Camera },
     { href: '/assistant', label: t('nav_guide'), icon: MessageSquare },
     { href: '/planner', label: t('nav_planner'), icon: Map },
+    { href: '/map', label: t('nav_map'), icon: Navigation },
   ];
 
   return (
